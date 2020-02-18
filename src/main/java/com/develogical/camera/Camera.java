@@ -6,6 +6,8 @@ public class Camera implements WriteCompleteListener {
     private Sensor sensor;
     private MemoryCard memoryCard;
     private boolean onStatus;
+    private boolean writing;
+
 
     public Camera(Sensor sensor, MemoryCard memoryCard) {
         this.sensor = sensor;
@@ -15,6 +17,7 @@ public class Camera implements WriteCompleteListener {
     public void pressShutter() {
         if (onStatus) {
             byte[] data = sensor.readData();
+            writing = true;
             memoryCard.write(data, this);
         }
     }
@@ -25,12 +28,14 @@ public class Camera implements WriteCompleteListener {
     }
 
     public void powerOff() {
-        sensor.powerDown();
+        if (!writing) {
+            sensor.powerDown();
+        }
     }
 
     @Override
     public void writeComplete() {
-
+        writing = false;
     }
 }
 

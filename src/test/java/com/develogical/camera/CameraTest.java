@@ -1,6 +1,7 @@
 package com.develogical.camera;
 
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import static org.mockito.Mockito.*;
 
@@ -24,11 +25,11 @@ public class CameraTest {
 
     @Test
     public void pressingTheShutterWithThePowerOnCopiesDataFromSensorToMemoryCard() {
-        when(sensor.readData()).thenReturn(new byte[0]);
+        when(sensor.readData()).thenReturn(new byte[]{42});
         camera.powerOn();
         camera.pressShutter();
         verify(sensor).readData();
-        verify(memoryCard).write(any(byte[].class), any(WriteCompleteListener.class));
+        verify(memoryCard).write(eq(new byte[]{42}), any(WriteCompleteListener.class));
     }
 
     @Test
@@ -37,5 +38,14 @@ public class CameraTest {
         camera.pressShutter();
         verifyZeroInteractions(sensor);
         verifyZeroInteractions(memoryCard);
+    }
+
+    @Test
+    public void ifDataBeingWrittenDoNotSwitchOff() {
+        when(sensor.readData()).thenReturn(new byte[0]);
+        camera.powerOn();
+        camera.pressShutter();
+        camera.powerOff();
+        verify(sensor, times(0)).powerDown();
     }
 }
