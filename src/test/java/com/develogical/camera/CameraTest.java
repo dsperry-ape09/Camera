@@ -30,4 +30,12 @@ public class CameraTest {
         verify(sensor).readData();
         verify(memoryCard).write(any(byte[].class), any(WriteCompleteListener.class));
     }
+
+    @Test
+    public void pressingTheShutterWhenIsPowerOffDoesNothing() {
+        when(sensor.readData()).thenReturn(new byte[0]);
+        camera.pressShutter();
+        verifyZeroInteractions(sensor);
+        verifyZeroInteractions(memoryCard);
+    }
 }
