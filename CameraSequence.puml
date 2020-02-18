@@ -1,0 +1,24 @@
+@startuml
+
+Test -> Camera: powerOn
+activate Camera
+Camera -> Sensor: powerUp
+deactivate Camera
+
+Test -> Camera: pressShutter
+activate Camera
+Camera -> Sensor: readData
+activate Sensor
+Camera <-- Sensor: data
+deactivate Sensor
+
+Camera -> MemoryCard: write
+activate MemoryCard
+
+Test -> Camera: powerOff
+MemoryCard -> Camera: writeComplete
+deactivate MemoryCard
+Camera -> Sensor: powerDown
+deactivate Camera
+
+@enduml
