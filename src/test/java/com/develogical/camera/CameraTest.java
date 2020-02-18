@@ -9,5 +9,9 @@ public class CameraTest {
     @Test
     public void switchingTheCameraOnPowersUpTheSensor() {
         // write your test here
+        Sensor sensor = mock(Sensor.class);
+        Camera camera = new Camera(sensor);
+        camera.powerOn();
+        verify(sensor).powerUp();
     }
 }
