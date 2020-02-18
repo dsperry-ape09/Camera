@@ -48,4 +48,16 @@ public class CameraTest {
         camera.powerOff();
         verify(sensor, times(0)).powerDown();
     }
+
+    @Test
+    public void checkOnceDataWrittenThenShutDown() {
+        when(sensor.readData()).thenReturn(new byte[0]);
+        camera.powerOn();
+        camera.pressShutter();
+        ArgumentCaptor<WriteCompleteListener> argument = ArgumentCaptor.forClass(WriteCompleteListener.class);
+        verify(memoryCard).write(any(byte[].class), argument.capture());
+        camera.powerOff();
+        argument.getValue().writeComplete();
+        verify(sensor).powerDown();
+    }
 }

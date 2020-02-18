@@ -31,11 +31,15 @@ public class Camera implements WriteCompleteListener {
         if (!writing) {
             sensor.powerDown();
         }
+        onStatus = false;
     }
 
     @Override
     public void writeComplete() {
         writing = false;
+        if (!onStatus) {
+            sensor.powerDown();
+        }
     }
 }
 
