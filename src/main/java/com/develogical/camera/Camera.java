@@ -1,17 +1,20 @@
 package com.develogical.camera;
 
-public class Camera {
+public class Camera implements WriteCompleteListener {
 
 
     private Sensor sensor;
+    private MemoryCard memoryCard;
 
-    public Camera(Sensor sensor) {
-
+    public Camera(Sensor sensor, MemoryCard memoryCard) {
         this.sensor = sensor;
+        this.memoryCard = memoryCard;
     }
 
     public void pressShutter() {
         // not implemented
+        byte[] data = sensor.readData();
+        memoryCard.write(data, this);
     }
 
     public void powerOn() {
@@ -20,6 +23,11 @@ public class Camera {
 
     public void powerOff() {
         sensor.powerDown();
+    }
+
+    @Override
+    public void writeComplete() {
+
     }
 }
 
