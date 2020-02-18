@@ -1,6 +1,6 @@
 package com.develogical.camera;
 
-public class Camera implements WriteCompleteListener {
+public class Camera {
 
 
     private Sensor sensor;
@@ -18,7 +18,7 @@ public class Camera implements WriteCompleteListener {
         if (onStatus) {
             byte[] data = sensor.readData();
             writing = true;
-            memoryCard.write(data, this);
+            memoryCard.write(data, () -> writeComplete());
         }
     }
 
@@ -34,8 +34,7 @@ public class Camera implements WriteCompleteListener {
         onStatus = false;
     }
 
-    @Override
-    public void writeComplete() {
+    private void writeComplete() {
         writing = false;
         if (!onStatus) {
             sensor.powerDown();
